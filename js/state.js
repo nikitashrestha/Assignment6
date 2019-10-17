@@ -1,4 +1,4 @@
-// // GAME STATE
+//  GAME STATE
 // const state = {
 //     current : 0,
 //     getReady : 0,
