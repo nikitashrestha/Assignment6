@@ -6,7 +6,7 @@ class Score{
         this.value = 0;
     }
 
-    draw(){
+    draw(state){
         this.context.fillStyle = "#FFF";
         this.context.strokeStyle = "#000";
         if(state.current == state.game){

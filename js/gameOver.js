@@ -14,9 +14,8 @@ class GameOver{
         this.DIEAUDIO.src = 'audio/die.wav';
     }
 
-    draw(){
-
-        if(state.current == state.over){
+    draw(state){
+        if(state == 2){
 
             this.context.drawImage(this.image, this.sX, this.sY, this.w, this.h, this.x, this.y,this.w, this.h);
         

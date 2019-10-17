@@ -16,9 +16,9 @@ class Foreground{
         this.context.drawImage(this.image, 276, 0, this.w, this.h, this.x + this.w, this.y, this.w, this.h);
     }
 
-    update(){
+    update(state){
 
-        if(state.current == state.game){
+        if(state == 1){
 
             this.x = (this.x - this.dx)%(this.w/2);
             

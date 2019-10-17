@@ -12,9 +12,9 @@ class Getready{
         this.y = 80;
     }
 
-    draw(){
+    draw(state){
 
-        if(state.current == state.getReady){
+        if(state == 0){
 
             this.context.drawImage(this.image, this.sX, this.sY, this.w, this.h, this.x, this.y, this.w, this.h)  ;          
         

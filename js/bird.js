@@ -36,16 +36,17 @@ class Bird{
         this.speed = -this.jump;
     }
 
-    update(frames){
+    update(frames,stateObj){
         //When game state == READY, bird flap slowly
-        this.period = state.current == state.getReady ? 10 : 5;
+        let currentState = stateObj.getState();
+        this.period = currentState == 0 ? 10 : 5;
 
         //Increment frame by 1 in each period
         this.frame += frames % this.period == 0 ? 1 : 0;
         //console.log(frames);
         this.frame = this.frame % this.sX.length;
 
-        if(state.current == state.getReady){
+        if(currentState == 0){
             
             this.y = 150; //Reset bird position when game restarts
             this.rotation = 0 * this.DEGREE;
@@ -60,11 +61,10 @@ class Bird{
             if(this.y + this.h/2 >= this.canvas.height - this.foreground.h){
 
                 this.y = this.canvas.height - this.foreground.h - this.h/2;
-                console.log('collision');
 
-                if(state.current == state.game){
+                if(currentState == 1){
                 
-                    state.current = state.over;
+                    stateObj.changeState(2);
                     this.DIEAUDIO.play();
                     
                 }

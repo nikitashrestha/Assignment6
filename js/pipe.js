@@ -20,9 +20,6 @@ class Obstacles{
 
             let p = this.position[i];
             let topYposition = p.y;
-            console.log(p.y);
-            console.log(p.x);
-            //console.log(image);
             let buttomYposition = p.y + this.h + this.gap;
 
             //drawing top pipe
@@ -34,9 +31,9 @@ class Obstacles{
         }
     }
 
-    update(bird,score,frames){
-
-        if(state.current != state.game){
+    update(bird,score,frames,stateObj){
+        let currenState = stateObj.getState();
+        if(currenState != 1){
             
             return;
 
@@ -61,7 +58,7 @@ class Obstacles{
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > p.y && bird.y - bird.radius < p.y + this.h){
                 
                 this.HITAUDIO.play();
-                state.current = state.over;
+                stateObj.changeState(2);
 
             }
 
@@ -69,7 +66,7 @@ class Obstacles{
             if(bird.x + bird.radius > p.x && bird.x - bird.radius < p.x + this.w && bird.y + bird.radius > bottomPipeYPos && bird.y - bird.radius < bottomPipeYPos + this.h){
 
                 this.HITAUDIO.play();
-                state.current = state.over;
+                stateObj.changeState(2);
 
             }
 

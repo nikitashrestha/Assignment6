@@ -1,25 +1,5 @@
-// GAME STATE
-const state = {
-    current : 0,
-    getReady : 0,
-    game : 1,
-    over : 2
-}
-
-//GAME KEYSTATE
-
-const keyState = {
-    current : 0,
-    pressed : 1,
-    released : 0
-}
-
-
-
 class Game{
     constructor(canvasId){
-        // this.canvas = canvas;
-        // this.context = context;
         this.canvas = document.createElement('canvas');
         this.canvas.setAttribute('id', canvasId);
         this.canvas.width = '320';
@@ -30,14 +10,17 @@ class Game{
         this.image = new Image();
         this.image.src = 'images/sprite.png';
         this.frames = 0;
+        this.state = new State();
         this.foreground = new Foreground(this.canvas, this.context, this.image);
         this.obstacles = new Obstacles(this.canvas, this.context, this.image);
         this.scoreCard = new Score(this.canvas, this.context);
         this.bird = new Bird(this.foreground, this.canvas, this.context, this.image);
         this.getReady = new Getready(this.canvas, this.context, this.image);
-        this.gameOver = new GameOver(this.context, this.context, this.image);
+        this.gameOver = new GameOver(this.canvas, this.context, this.image);
         this.SWOOSHINGAUDIO = new Audio();
         this.SWOOSHINGAUDIO.src = 'audio/wooshing.wav';
+        this.onClick();
+        this.onKeyboardEventPressed();
 
         //PLAY BUTTON
 
@@ -61,30 +44,28 @@ class Game{
         this.obstacles.draw();
         this.foreground.draw();
         this.bird.draw();
-        this.getReady.draw();
-        this.gameOver.draw();
-        this.scoreCard.draw();
-        this.onClick();
-        this.onKeyboardEventPressed();
-        
+        this.getReady.draw(this.state.getState());
+        this.gameOver.draw(this.state.getState());
+        this.scoreCard.draw(this.state.getState());
     }
 
     onClick(){
         var that = this;
         this.canvas.onclick = function(event){
-            switch(state.current){
-                case state.getReady:
-                    console.log('get Ready State');
-                    state.current = state.game;
+            let state = that.state.getState();
+            switch(state){
+                case 0:
+                    that.state.changeState(1);
+                    //that.state.changeState(state.game);
                     that.SWOOSHINGAUDIO.play();
                     break;
                 
-                case state.game:
+                case 1:
                     if(that.bird.y - that.bird.radius <= 0) return;
                     that.bird.flapWings();
                     break;
 
-                case state.over:
+                case 2:
                     let rect = that.canvas.getBoundingClientRect();
                     let clickX = event.clientX - rect.left;
                     let clickY = event.clientY - rect.top;
@@ -94,8 +75,7 @@ class Game{
                         that.obstacles.reset();
                         that.bird.resetSpeed();
                         that.scoreCard.reset();
-                        state.current = state.getReady;
-
+                        that.state.changeState(0);
                     }
                     break;
             }
@@ -104,31 +84,35 @@ class Game{
 
     onKeyboardEventPressed(){
         var that = this;
-        window.addEventListener('keydown',function(event){
+        window.addEventListener('keydown', function(event){
             var key = event.key || event.keyCode;
-        
+            let state = that.state.getState();
             switch(key){
+                
                 case ' ':
                     event.preventDefault();
-                    if(state.current == state.game){
+                    if(state == 1){
 
                         that.bird.flapWings();
 
                     }
+                    break;
             }
         });
     }
 
     update(){
-        this.bird.update(this.frames);
-        this.foreground.update();
-        this.obstacles.update(this.bird, this.scoreCard, this.frames);
+        this.bird.update(this.frames,this.state);
+        this.foreground.update(this.state.getState());
+        this.obstacles.update(this.bird, this.scoreCard, this.frames, this.state);
     }
 
     loop(){
         this.update();
         this.drawCanvas();
         this.frames++;
-        window.requestAnimationFrame(this.loop.bind(this));
+        requestAnimationFrame(this.loop.bind(this));
     }
 }
+
+
