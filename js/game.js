@@ -20,7 +20,6 @@ class Game{
         this.SWOOSHINGAUDIO = new Audio();
         this.SWOOSHINGAUDIO.src = 'audio/wooshing.wav';
         this.keyEvent = keyEvent;
-        console.log(this.keyEvent);
         this.onClick();
         this.onKeyboardEventPressed();
 
