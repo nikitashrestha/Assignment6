@@ -1,5 +1,5 @@
 class Game{
-    constructor(canvasId){
+    constructor(canvasId, keyEvent){
         this.canvas = document.createElement('canvas');
         this.canvas.setAttribute('id', canvasId);
         this.canvas.width = '320';
@@ -19,6 +19,8 @@ class Game{
         this.gameOver = new GameOver(this.canvas, this.context, this.image);
         this.SWOOSHINGAUDIO = new Audio();
         this.SWOOSHINGAUDIO.src = 'audio/wooshing.wav';
+        this.keyEvent = keyEvent;
+        console.log(this.keyEvent);
         this.onClick();
         this.onKeyboardEventPressed();
 
@@ -33,7 +35,7 @@ class Game{
     }
 
     drawCanvas(){
-
+        let currentState = this.state.getState();
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         this.context.fillStyle = "#70c5ce";
         this.context.fillRect(0 , 0, this.canvas.width, this.canvas.height);
@@ -44,9 +46,9 @@ class Game{
         this.obstacles.draw();
         this.foreground.draw();
         this.bird.draw();
-        this.getReady.draw(this.state.getState());
-        this.gameOver.draw(this.state.getState());
-        this.scoreCard.draw(this.state.getState());
+        this.getReady.draw(currentState);
+        this.gameOver.draw(currentState);
+        this.scoreCard.draw(currentState);
     }
 
     onClick(){
@@ -62,7 +64,9 @@ class Game{
                 
                 case 1:
                     if(that.bird.y - that.bird.radius <= 0) return;
-                    that.bird.flapWings();
+                    if(that.keyEvent == 0){
+                        that.bird.flapWings();
+                    }
                     break;
 
                 case 2:
@@ -92,8 +96,12 @@ class Game{
                 case ' ':
                     event.preventDefault();
                     if(state == 1){
+                        if(that.bird.y - that.bird.radius <= 0) return;
+                        if(that.keyEvent == 1){
+                            console.log('key');
+                            that.bird.flapWings();
 
-                        that.bird.flapWings();
+                        }
 
                     }
                     break;
